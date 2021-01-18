@@ -115,14 +115,6 @@ public class HW1 {
      Каждый 4-й год является високосным, кроме каждого 100-го, при этом каждый 400-й – високосный.
      */
     public static void isLeapYear(int year) {
-        if (year % 400 == 0) {
-            System.out.println(year + " - год високосный!");
-        } else if (year % 100 == 0) {
-            System.out.println(year + " - год невисокосный!");
-        } else if (year % 4 == 0) {
-            System.out.println(year + " - год високосный!");
-        } else {
-            System.out.println(year + " - год невисокосный!");
-        }
+        System.out.println(year % 400 == 0 || year % 4 == 0 && year % 100 != 0 ? year + " - год високосный!" : year + " - год невисокосный!");
     }
 }
