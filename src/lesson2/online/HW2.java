@@ -43,21 +43,16 @@ public class HW2 {
           при этом метод должен циклически сместить все элементы массива на n позиций.
           [1,2,3,4,5], -2 => [3,4,5,1,2]
           [1,2,3,4,5], 2 => [4,5,1,2,3]
+         7 **** Не пользоваться вспомогательным массивом при решении задачи 6.
          */
         int[] array6 = {1, 2, 3, 4, 5};
-        int offset = -2;
-        System.out.print("\n" + "Array with offset: ");
+        int offset = -7;
+        System.out.print("\n" + "Array with offset and without additional array: ");
         printOneDimensionalArray(offsetElements(array6, offset));
-        int offset2 = 2;
-        System.out.print("\n" + "Array with offset: ");
-        printOneDimensionalArray(offsetElements(array6, offset2));
-
-        // 7 **** Не пользоваться вспомогательным массивом при решении задачи 6.
-        System.out.print("\n" + "Array with offset without additional array: ");
-        printOneDimensionalArray(offsetElements2(array6, offset));
-        System.out.print("\n" + "Array with offset without additional array: ");
-        printOneDimensionalArray(offsetElements2(array6, offset2));
-
+        int offset2 = 7;
+        int[] array7 = {1, 2, 3, 4, 5};
+        System.out.print("\n" + "Array with offset and without additional array: ");
+        printOneDimensionalArray(offsetElements(array7, offset2));
     }
 
     // Вспомогательный метод, распечатывающий массив в консоль, для избежания дублирования кода
@@ -160,27 +155,27 @@ public class HW2 {
      при этом метод должен циклически сместить все элементы массива на n позиций.
      [1,2,3,4,5], -2 => [3,4,5,1,2]
      [1,2,3,4,5], 2 => [4,5,1,2,3]
+    7 **** Не пользоваться вспомогательным массивом при решении задачи 6.
      */
     public static int[] offsetElements(int[] array, int offset) {
-        int[] resultArray = new int[array.length];
-        int currentIndex;
-        for (int i = 0; i < array.length; i++) {
-            currentIndex = i + offset;
-            if (currentIndex > array.length - 1) {
-                currentIndex = currentIndex - array.length;
+        while (offset != 0) {
+            int tmp;
+            if (offset > 0) {
+                tmp = array[array.length - 1];
+                for (int i = array.length - 1; i > 0; i--) {
+                    array[i] = array[i - 1];
+                }
+                array[0] = tmp;
+                offset--;
+            } else {
+                tmp = array[0];
+                for (int i = 0; i < array.length - 1; i++) {
+                    array[i] = array[i + 1];
+                }
+                array[array.length - 1] = tmp;
+                offset++;
             }
-            if (currentIndex < 0) {
-                currentIndex = currentIndex + array.length;
-            }
-            resultArray[currentIndex] = array[i];
         }
-        return resultArray;
-    }
-
-    // 7 **** Не пользоваться вспомогательным массивом при решении задачи 6.
-    public static int[] offsetElements2(int[] array, int offset) {
-        //TO DO
         return array;
     }
-
 }
