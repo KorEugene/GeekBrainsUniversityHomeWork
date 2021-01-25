@@ -8,6 +8,8 @@ public class HW3 {
     public static char[][] map;
     public static int mapSizeX;
     public static int mapSizeY;
+    public static int maxTurns;
+    public static int turnsMade;
 
     public static final char HUMAN_DOT = 'X';
     public static final char AI_DOT = 'O';
@@ -22,6 +24,7 @@ public class HW3 {
 
         while (true) {
             humanTurn();
+            turnsMade++;
             printMap();
 
             if (checkWinPlayer(HUMAN_DOT)) {
@@ -35,6 +38,7 @@ public class HW3 {
             }
 
             aiTurn();
+            turnsMade++;
             printMap();
 
             if (checkWinPlayer(AI_DOT)) {
@@ -55,8 +59,9 @@ public class HW3 {
     public static void createMap() {
         mapSizeX = 3;
         mapSizeY = 3;
+        maxTurns = mapSizeX * mapSizeY;
+        turnsMade = 0;
         map = new char[mapSizeY][mapSizeX];
-
         for (int y = 0; y < mapSizeY; y++) {
             for (int x = 0; x < mapSizeX; x++) {
                 map[y][x] = EMPTY_DOT;
@@ -67,11 +72,13 @@ public class HW3 {
     public static void printMap() {
         for (int y = 0; y < mapSizeY; y++) {
             for (int x = 0; x < mapSizeX; x++) {
-                System.out.print(map[y][x] + " | ");
+                System.out.print(" | " + map[y][x]);
+                if (x + 1 == mapSizeX) {
+                    System.out.println(" | ");
+                }
             }
-            System.out.println();
         }
-        System.out.println();
+        System.out.println("\n" + "Current turn: " + turnsMade + "\n");
     }
 
     public static void humanTurn() {
@@ -82,7 +89,6 @@ public class HW3 {
             System.out.println("Enter the coordinates(x,y) of your turn: ");
             x = SCANNER.nextInt() - 1;
             y = SCANNER.nextInt() - 1;
-
         } while (!isValidCell(y, x) || !isEmptyCell(y, x));
         map[y][x] = HUMAN_DOT;
     }
@@ -107,27 +113,48 @@ public class HW3 {
         return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
     }
 
+    // * Усовершенствовать метод проверки победы (через циклы);
     public static boolean checkWinPlayer(char dotPlayer) {
-        if (map[0][0] == dotPlayer && map[0][1] == dotPlayer && map[0][2] == dotPlayer) return true;
-        if (map[1][0] == dotPlayer && map[1][1] == dotPlayer && map[1][2] == dotPlayer) return true;
-        if (map[2][0] == dotPlayer && map[2][1] == dotPlayer && map[2][2] == dotPlayer) return true;
 
-        if (map[0][0] == dotPlayer && map[1][0] == dotPlayer && map[2][0] == dotPlayer) return true;
-        if (map[0][1] == dotPlayer && map[1][1] == dotPlayer && map[2][1] == dotPlayer) return true;
-        if (map[0][2] == dotPlayer && map[1][2] == dotPlayer && map[2][2] == dotPlayer) return true;
+        boolean horizontal;
 
-        if (map[0][0] == dotPlayer && map[1][1] == dotPlayer && map[2][2] == dotPlayer) return true;
-        if (map[0][2] == dotPlayer && map[1][1] == dotPlayer && map[2][0] == dotPlayer) return true;
-        return false;
+        for (int y = 0; y < mapSizeY; y++) {
+            horizontal = true;
+            for (int x = 0; x < mapSizeX; x++) {
+                if (map[y][x] != dotPlayer) {
+                    horizontal = false;
+                    break;
+                }
+            }
+            if (horizontal) return true;
+        }
+
+        boolean vertical;
+
+        int counter = 0;
+        while (counter < mapSizeX) {
+            vertical = true;
+            for (int y = 0; y < mapSizeY; y++) {
+                if (map[y][counter] != dotPlayer) {
+                    vertical = false;
+                    counter++;
+                    break;
+                }
+            }
+            if (vertical) return true;
+        }
+
+        boolean toRight = true;
+        boolean toLeft = true;
+
+        for (int y = 0; y < mapSizeY; y++) {
+            toRight &= (map[y][y] == dotPlayer);
+            toLeft &= (map[mapSizeY - 1 - y][y] == dotPlayer);
+        }
+        return toLeft || toRight;
     }
 
     public static boolean isFullMap() {
-        for (int y = 0; y < mapSizeY; y++) {
-            for (int x = 0; x < mapSizeX; x++) {
-                if (map[y][x] == EMPTY_DOT) return false;
-            }
-        }
-        return true;
+        return turnsMade == maxTurns;
     }
-
 }
