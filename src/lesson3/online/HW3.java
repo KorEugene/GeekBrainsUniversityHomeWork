@@ -6,9 +6,11 @@ import java.util.Scanner;
 public class HW3 {
 
     public static char[][] map;
-    public static int mapSizeX;
-    public static int mapSizeY;
-    public static int maxTurns;
+    // ** Расширить поле до 5х5 и в качестве условий победы установить серию равной 4.
+    public static int mapSizeX = 5;
+    public static int mapSizeY = 5;
+    public static int lineLengthToWin = 4;
+    public static int maxTurns = mapSizeX * mapSizeY;
     public static int turnsMade;
 
     public static final char HUMAN_DOT = 'X';
@@ -21,45 +23,34 @@ public class HW3 {
     public static void main(String[] args) {
         createMap();
         printMap();
-
         while (true) {
             humanTurn();
             turnsMade++;
             printMap();
-
             if (checkWinPlayer(HUMAN_DOT)) {
                 System.out.println("Human won!");
                 break;
             }
-
             if (isFullMap()) {
                 System.out.println("Nobody won!");
                 break;
             }
-
             aiTurn();
             turnsMade++;
             printMap();
-
             if (checkWinPlayer(AI_DOT)) {
                 System.out.println("AI won!");
                 break;
             }
-
             if (isFullMap()) {
                 System.out.println("Nobody won!");
                 break;
             }
         }
-
         System.out.println("End of the game!");
-
     }
 
     public static void createMap() {
-        mapSizeX = 3;
-        mapSizeY = 3;
-        maxTurns = mapSizeX * mapSizeY;
         turnsMade = 0;
         map = new char[mapSizeY][mapSizeX];
         for (int y = 0; y < mapSizeY; y++) {
@@ -84,7 +75,6 @@ public class HW3 {
     public static void humanTurn() {
         int x;
         int y;
-
         do {
             System.out.println("Enter the coordinates(x,y) of your turn: ");
             x = SCANNER.nextInt() - 1;
@@ -96,7 +86,6 @@ public class HW3 {
     public static void aiTurn() {
         int x;
         int y;
-
         do {
             x = RANDOM.nextInt(mapSizeX);
             y = RANDOM.nextInt(mapSizeY);
@@ -113,39 +102,69 @@ public class HW3 {
         return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
     }
 
-    // * Усовершенствовать метод проверки победы (через циклы);
+    // * Усовершенствовать метод проверки победы (через циклы).
     public static boolean checkWinPlayer(char dotPlayer) {
-
-        boolean horizontal;
-
+        int horizontalCounter = 0;
         for (int y = 0; y < mapSizeY; y++) {
-            horizontal = true;
             for (int x = 0; x < mapSizeX; x++) {
-                if (map[y][x] != dotPlayer) {
-                    horizontal = false;
-                    break;
+                if (map[y][x] == dotPlayer) {
+                    horizontalCounter++;
+                    if (horizontalCounter == lineLengthToWin) return true;
+                } else {
+                    horizontalCounter = 0;
                 }
             }
-            if (horizontal) return true;
         }
-
-        boolean vertical;
-
+        int verticalCounter = 0;
         int counter = 0;
         while (counter < mapSizeX) {
-            vertical = true;
             for (int y = 0; y < mapSizeY; y++) {
-                if (map[y][counter] != dotPlayer) {
-                    vertical = false;
-                    counter++;
-                    break;
+                if (map[y][counter] == dotPlayer) {
+                    verticalCounter++;
+                    if (verticalCounter == lineLengthToWin) return true;
+                } else {
+                    verticalCounter = 0;
                 }
             }
-            if (vertical) return true;
+            counter++;
         }
 
         boolean toRight = true;
         boolean toLeft = true;
+        int toRightCounter = 0;
+
+        for (int y = 0; y < mapSizeY; y++) {
+            if (y + lineLengthToWin <= mapSizeY) {
+                for (int x = 0; x < mapSizeX; x++) {
+                    if (x + lineLengthToWin <= mapSizeX && map[y][x] == dotPlayer) {
+
+                    }
+                }
+                /*while (y < mapSizeY) {
+                    if (map[y][y] == dotPlayer) {
+                        toRightCounter++;
+                        if (toRightCounter == lineLengthToWin) return true;
+                    } else {
+                        toRightCounter = 0;
+                    }
+                    y++;
+                }*/
+            }
+        }
+
+        /*for (int y = 0; y < mapSizeY; y++) {
+            if (y + lineLengthToWin <= mapSizeX && y + lineLengthToWin <= mapSizeY) {
+                while (y < mapSizeY) {
+                    if (map[y][y] == dotPlayer) {
+                        toRightCounter++;
+                        if (toRightCounter == lineLengthToWin) return true;
+                    } else {
+                        toRightCounter = 0;
+                    }
+                    y++;
+                }
+            }
+        }*/
 
         for (int y = 0; y < mapSizeY; y++) {
             toRight &= (map[y][y] == dotPlayer);
