@@ -128,49 +128,37 @@ public class HW3 {
             }
             counter++;
         }
-
-        boolean toRight = true;
-        boolean toLeft = true;
         int toRightCounter = 0;
-
-        for (int y = 0; y < mapSizeY; y++) {
-            if (y + lineLengthToWin <= mapSizeY) {
-                for (int x = 0; x < mapSizeX; x++) {
-                    if (x + lineLengthToWin <= mapSizeX && map[y][x] == dotPlayer) {
-
-                    }
-                }
-                /*while (y < mapSizeY) {
-                    if (map[y][y] == dotPlayer) {
+        int toLeftCounter = 0;
+        for (int y = 0; y + lineLengthToWin <= mapSizeY; y++) {
+            for (int x = 0; x + lineLengthToWin <= mapSizeX; x++) {
+                int toRightCurrY = y;
+                int toRightCurrX = x;
+                while (toRightCurrY < mapSizeY && toRightCurrX < mapSizeX) {
+                    if (map[toRightCurrY][toRightCurrX] == dotPlayer) {
                         toRightCounter++;
                         if (toRightCounter == lineLengthToWin) return true;
                     } else {
                         toRightCounter = 0;
                     }
-                    y++;
-                }*/
-            }
-        }
-
-        /*for (int y = 0; y < mapSizeY; y++) {
-            if (y + lineLengthToWin <= mapSizeX && y + lineLengthToWin <= mapSizeY) {
-                while (y < mapSizeY) {
-                    if (map[y][y] == dotPlayer) {
-                        toRightCounter++;
-                        if (toRightCounter == lineLengthToWin) return true;
+                    toRightCurrY++;
+                    toRightCurrX++;
+                }
+                int toLeftCurrY = y;
+                int toLeftCurrX = mapSizeX - 1 - x;
+                while (toLeftCurrY < mapSizeY && toLeftCurrX >= 0) {
+                    if (map[toLeftCurrY][toLeftCurrX] == dotPlayer) {
+                        toLeftCounter++;
+                        if (toLeftCounter == lineLengthToWin) return true;
                     } else {
-                        toRightCounter = 0;
+                        toLeftCounter = 0;
                     }
-                    y++;
+                    toLeftCurrX--;
+                    toLeftCurrY++;
                 }
             }
-        }*/
-
-        for (int y = 0; y < mapSizeY; y++) {
-            toRight &= (map[y][y] == dotPlayer);
-            toLeft &= (map[mapSizeY - 1 - y][y] == dotPlayer);
         }
-        return toLeft || toRight;
+        return false;
     }
 
     public static boolean isFullMap() {
