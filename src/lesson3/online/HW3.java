@@ -134,27 +134,23 @@ public class HW3 {
             for (int x = 0; x + lineLengthToWin <= mapSizeX; x++) {
                 int toRightCurrY = y;
                 int toRightCurrX = x;
-                while (toRightCurrY < mapSizeY && toRightCurrX < mapSizeX) {
+                int toLeftCurrX = mapSizeX - 1 - x;
+                while (toRightCurrY < mapSizeY && toRightCurrX < mapSizeX && toLeftCurrX >= 0) {
                     if (map[toRightCurrY][toRightCurrX] == dotPlayer) {
                         toRightCounter++;
                         if (toRightCounter == lineLengthToWin) return true;
                     } else {
                         toRightCounter = 0;
                     }
-                    toRightCurrY++;
-                    toRightCurrX++;
-                }
-                int toLeftCurrY = y;
-                int toLeftCurrX = mapSizeX - 1 - x;
-                while (toLeftCurrY < mapSizeY && toLeftCurrX >= 0) {
-                    if (map[toLeftCurrY][toLeftCurrX] == dotPlayer) {
+                    if (map[toRightCurrY][toLeftCurrX] == dotPlayer) {
                         toLeftCounter++;
                         if (toLeftCounter == lineLengthToWin) return true;
                     } else {
                         toLeftCounter = 0;
                     }
+                    toRightCurrY++;
+                    toRightCurrX++;
                     toLeftCurrX--;
-                    toLeftCurrY++;
                 }
             }
         }
