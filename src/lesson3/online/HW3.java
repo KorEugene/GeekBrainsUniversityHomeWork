@@ -12,6 +12,8 @@ public class HW3 {
     public static int lineLengthToWin = 4;
     public static int maxTurns = mapSizeX * mapSizeY;
     public static int turnsMade;
+    public static int humanTurnX;
+    public static int humanTurnY;
 
     public static final char HUMAN_DOT = 'X';
     public static final char AI_DOT = 'O';
@@ -81,31 +83,151 @@ public class HW3 {
             y = SCANNER.nextInt() - 1;
         } while (!isValidCell(y, x) || !isEmptyCell(y, x));
         map[y][x] = HUMAN_DOT;
+        humanTurnY = y;
+        humanTurnX = x;
     }
 
+    // *** Проработать базовый искусственный интеллект, чтобы он мог блокировать ходы игрока.
     public static void aiTurn() {
         int x;
         int y;
-        do {
-            x = RANDOM.nextInt(mapSizeX);
-            y = RANDOM.nextInt(mapSizeY);
-        } while (!isEmptyCell(y, x));
+        int[] nextTurn = chooseNextTurn();
+        if (nextTurn[0] == -1) {
+            do {
+                x = RANDOM.nextInt(mapSizeX);
+                y = RANDOM.nextInt(mapSizeY);
+            } while (!isEmptyCell(y, x));
+        } else {
+            x = nextTurn[1];
+            y = nextTurn[0];
+        }
         map[y][x] = AI_DOT;
-
     }
 
-    public static boolean isEmptyCell(int y, int x) {
-        return map[y][x] == EMPTY_DOT;
+    public static int[] chooseNextTurn() {
+        int[] nextTurn = {-1, -1};
+        int[] maxDots = findMaxHumanDotsInLines();
+        int max = -1;
+        int indexOfMax = -1;
+        for (int i = 0; i < maxDots.length; i++) {
+            if (maxDots[i] > max) {
+                max = maxDots[i];
+                indexOfMax = i;
+            }
+        }
+
+        for (int i = 1; i < mapSizeX - 1; i++) {
+            if (indexOfMax == 0) {
+                if (humanTurnX - i >= 0 && map[humanTurnY][humanTurnX - i] == EMPTY_DOT) {
+                    nextTurn[0] = humanTurnY;
+                    nextTurn[1] = humanTurnX - i;
+                    break;
+                }
+                if (humanTurnX + i < mapSizeX && map[humanTurnY][humanTurnX + i] == EMPTY_DOT) {
+                    nextTurn[0] = humanTurnY;
+                    nextTurn[1] = humanTurnX + i;
+                    break;
+                }
+            }
+            if (indexOfMax == 1) {
+                if (humanTurnY - i >= 0 && map[humanTurnY - i][humanTurnX] == EMPTY_DOT) {
+                    nextTurn[1] = humanTurnX;
+                    nextTurn[0] = humanTurnY - i;
+                    break;
+                }
+                if (humanTurnY + i < mapSizeY && map[humanTurnY + i][humanTurnX] == EMPTY_DOT) {
+                    nextTurn[1] = humanTurnX;
+                    nextTurn[0] = humanTurnY + i;
+                    break;
+                }
+            }
+            if (indexOfMax == 2) {
+                if (humanTurnY - i >= 0 && humanTurnX - i >= 0 && map[humanTurnY - i][humanTurnX - i] == EMPTY_DOT) {
+                    nextTurn[0] = humanTurnY - i;
+                    nextTurn[1] = humanTurnX - i;
+                    break;
+                }
+                if (humanTurnY + i < mapSizeY && humanTurnX + i < mapSizeX && map[humanTurnY + i][humanTurnX + i] == EMPTY_DOT) {
+                    nextTurn[0] = humanTurnY + i;
+                    nextTurn[1] = humanTurnX + i;
+                    break;
+                }
+            }
+            if (indexOfMax == 3) {
+                if (humanTurnY - i >= 0 && humanTurnX + i < mapSizeX && map[humanTurnY - i][humanTurnX + i] == EMPTY_DOT) {
+                    nextTurn[0] = humanTurnY - i;
+                    nextTurn[1] = humanTurnX + i;
+                    break;
+                }
+                if (humanTurnY + i < mapSizeY && humanTurnX - i >= 0 && map[humanTurnY + i][humanTurnX - i] == EMPTY_DOT) {
+                    nextTurn[0] = humanTurnY + i;
+                    nextTurn[1] = humanTurnX - i;
+                    break;
+                }
+            }
+        }
+        return nextTurn;
     }
 
-    public static boolean isValidCell(int y, int x) {
-        return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
+    public static int[] findMaxHumanDotsInLines() {
+        int[] maxDots = new int[4];
+        int horizontalDots = 0;
+        for (int x = 0; x < mapSizeX; x++) {
+            if (map[humanTurnY][x] == HUMAN_DOT) {
+                horizontalDots++;
+            }
+        }
+        maxDots[0] = horizontalDots;
+        int verticalDots = 0;
+        for (int y = 0; y < mapSizeY; y++) {
+            if (map[y][humanTurnX] == HUMAN_DOT) {
+                verticalDots++;
+            }
+        }
+        maxDots[1] = verticalDots;
+        boolean toRightFlag = false;
+        int toRight = 0;
+        boolean toLeftFlag = false;
+        int toLeft = 0;
+        for (int y = 0; y + lineLengthToWin <= mapSizeY; y++) {
+            for (int x = 0; x + lineLengthToWin <= mapSizeX; x++) {
+                if (toRightFlag || toLeftFlag) break;
+                toRight = 0;
+                toLeft = 0;
+                int toRightCurrY = y;
+                int toRightCurrX = x;
+                int toLeftCurrX = mapSizeX - 1 - x;
+                while (toRightCurrY < mapSizeY && toRightCurrX < mapSizeX && toLeftCurrX >= 0) {
+                    if (map[toRightCurrY][toRightCurrX] == HUMAN_DOT) {
+                        toRight++;
+                        if (toRightCurrX == humanTurnX && toRightCurrY == humanTurnY) {
+                            toRightFlag = true;
+                        }
+                    }
+                    if (map[toRightCurrY][toLeftCurrX] == HUMAN_DOT) {
+                        toLeft++;
+                        if (toLeftCurrX == humanTurnX && toRightCurrY == humanTurnY) {
+                            toLeftFlag = true;
+                        }
+                    }
+                    toRightCurrY++;
+                    toRightCurrX++;
+                    toLeftCurrX--;
+                }
+
+            }
+        }
+        maxDots[2] = toRight;
+        maxDots[3] = toLeft;
+        return maxDots;
     }
+
 
     // * Усовершенствовать метод проверки победы (через циклы).
     public static boolean checkWinPlayer(char dotPlayer) {
-        int horizontalCounter = 0;
+        int horizontalCounter;
         for (int y = 0; y < mapSizeY; y++) {
+            horizontalCounter = 0;
             for (int x = 0; x < mapSizeX; x++) {
                 if (map[y][x] == dotPlayer) {
                     horizontalCounter++;
@@ -115,9 +237,10 @@ public class HW3 {
                 }
             }
         }
-        int verticalCounter = 0;
+        int verticalCounter;
         int counter = 0;
         while (counter < mapSizeX) {
+            verticalCounter = 0;
             for (int y = 0; y < mapSizeY; y++) {
                 if (map[y][counter] == dotPlayer) {
                     verticalCounter++;
@@ -128,10 +251,12 @@ public class HW3 {
             }
             counter++;
         }
-        int toRightCounter = 0;
-        int toLeftCounter = 0;
+        int toRightCounter;
+        int toLeftCounter;
         for (int y = 0; y + lineLengthToWin <= mapSizeY; y++) {
             for (int x = 0; x + lineLengthToWin <= mapSizeX; x++) {
+                toRightCounter = 0;
+                toLeftCounter = 0;
                 int toRightCurrY = y;
                 int toRightCurrX = x;
                 int toLeftCurrX = mapSizeX - 1 - x;
@@ -155,6 +280,14 @@ public class HW3 {
             }
         }
         return false;
+    }
+
+    public static boolean isEmptyCell(int y, int x) {
+        return map[y][x] == EMPTY_DOT;
+    }
+
+    public static boolean isValidCell(int y, int x) {
+        return x >= 0 && x < mapSizeX && y >= 0 && y < mapSizeY;
     }
 
     public static boolean isFullMap() {
