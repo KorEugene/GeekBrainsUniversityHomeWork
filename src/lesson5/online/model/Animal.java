@@ -21,16 +21,16 @@ public abstract class Animal {
         this.maxJump = RANDOM.nextDouble() * 10;
     }
 
-    public void run(double distance) {
-        System.out.println(calculateAction(RUN, maxRun, distance));
+    public String run(double distance) {
+        return calculateAction(RUN, maxRun, distance);
     }
 
-    public void swim(double distance) {
-        System.out.println(calculateAction(SWIM, maxSwim, distance));
+    public String swim(double distance) {
+        return calculateAction(SWIM, maxSwim, distance);
     }
 
-    public void jump(double distance) {
-        System.out.println(calculateAction(JUMP, maxJump, distance));
+    public String jump(double distance) {
+        return calculateAction(JUMP, maxJump, distance);
     }
 
     private String calculateAction(String action, double limit, double distance) {

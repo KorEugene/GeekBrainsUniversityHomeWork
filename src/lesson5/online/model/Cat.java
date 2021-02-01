@@ -7,7 +7,7 @@ public class Cat extends Animal {
     }
 
     @Override
-    public void swim(double distance) {
-        System.out.println("Sorry, but cats can't swim!");
+    public String swim(double distance) {
+        return "Sorry, but cats can't swim!";
     }
 }
