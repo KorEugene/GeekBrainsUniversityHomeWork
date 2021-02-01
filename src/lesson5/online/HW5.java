@@ -1,9 +1,6 @@
 package lesson5.online;
 
-import lesson5.online.model.Bird;
-import lesson5.online.model.Cat;
-import lesson5.online.model.Dog;
-import lesson5.online.model.Horse;
+import lesson5.online.model.*;
 
 public class HW5 {
 
@@ -27,30 +24,11 @@ public class HW5 {
         Horse horse1 = new Horse("Uragan");
         Horse horse2 = new Horse("Lightning");
 
-        dog1.run(600);
-        dog2.run(500);
-        cat1.run(150);
-        cat2.run(300);
-        bird1.run(3);
-        bird2.run(30);
-        horse1.run(1000);
-        horse2.run(1500);
-
-        dog1.swim(10);
-        dog2.swim(20);
-        cat1.swim(5);
-        bird1.swim(2);
-        horse1.swim(50);
-        horse2.swim(150);
-
-        dog1.jump(0.2);
-        dog2.jump(0.6);
-        cat1.jump(1);
-        cat2.jump(3);
-        bird1.jump(0.1);
-        bird2.jump(0.3);
-        horse1.jump(2);
-        horse2.jump(4);
-
+        Animal[] animals = {dog1, dog2, cat1, cat2, bird1, bird2, horse1, horse2};
+        for (Animal animal : animals) {
+            System.out.println(animal.run(500));
+            System.out.println(animal.swim(20));
+            System.out.println(animal.jump(1));
+        }
     }
 }
