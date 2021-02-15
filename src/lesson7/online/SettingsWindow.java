@@ -86,9 +86,11 @@ public class SettingsWindow extends JFrame {
         int gameMode;
 
         if (humanVsHuman.isSelected()) {
-            gameMode = GameMap.GAME_MODE_HUMAN_VS_HUMAN;
+//            gameMode = GameMap.GAME_MODE_HUMAN_VS_HUMAN;
+            gameMode = GameMap.GAME_MODE_HVH;
         } else if (humanVsAi.isSelected()) {
-            gameMode = GameMap.GAME_MODE_HUMAN_VS_AI;
+//            gameMode = GameMap.GAME_MODE_HUMAN_VS_AI;
+            gameMode = GameMap.GAME_MODE_HVA;
         } else {
             throw new RuntimeException("Неизвестный тип игры");
         }
