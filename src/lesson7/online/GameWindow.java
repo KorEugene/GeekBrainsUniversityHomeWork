@@ -40,7 +40,7 @@ public class GameWindow extends JFrame {
     }
 
     void startNewGame(int gameMode, int fieldSizeX, int fieldSizeY, int winLength) {
-        gameMap.removeAll();
+//        gameMap.removeAll();
         gameMap.start(gameMode, fieldSizeX, fieldSizeY, winLength);
     }
 }
