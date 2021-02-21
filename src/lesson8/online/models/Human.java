@@ -7,9 +7,9 @@ public class Human implements Moving {
     private final int MAX_RUN;
     private final int MAX_JUMP;
 
-    public Human(int MAX_RUN, int MAX_JUMP) {
-        this.MAX_RUN = MAX_RUN;
-        this.MAX_JUMP = MAX_JUMP;
+    public Human(int maxRun, int maxJump) {
+        this.MAX_RUN = maxRun;
+        this.MAX_JUMP = maxJump;
     }
 
     @Override
