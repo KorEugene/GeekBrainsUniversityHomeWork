@@ -4,17 +4,17 @@ import lesson8.online.actions.Moving;
 
 public class Human implements Moving {
 
-    private final int maxRun;
-    private final int maxJump;
+    private final int MAX_RUN;
+    private final int MAX_JUMP;
 
-    public Human(int maxRun, int maxJump) {
-        this.maxRun = maxRun;
-        this.maxJump = maxJump;
+    public Human(int MAX_RUN, int MAX_JUMP) {
+        this.MAX_RUN = MAX_RUN;
+        this.MAX_JUMP = MAX_JUMP;
     }
 
     @Override
     public boolean tryJump(int limit) {
-        if (isOverLimit(maxJump, limit)) {
+        if (isOverLimit(MAX_JUMP, limit)) {
             notJump(limit);
             return false;
         }
@@ -24,7 +24,7 @@ public class Human implements Moving {
 
     @Override
     public boolean tryRun(int limit) {
-        if (isOverLimit(maxRun, limit)) {
+        if (isOverLimit(MAX_RUN, limit)) {
             notRun(limit);
             return false;
         }
@@ -54,7 +54,7 @@ public class Human implements Moving {
 
     @Override
     public String toString() {
-        return Participants.HUMAN.getTitle() + ", maxRun=" + maxRun + ", maxJump=" + maxJump;
+        return Participants.HUMAN.getTitle() + ", maxRun=" + MAX_RUN + ", maxJump=" + MAX_JUMP;
     }
 
     private boolean isOverLimit(int opportunity, int limit) {
