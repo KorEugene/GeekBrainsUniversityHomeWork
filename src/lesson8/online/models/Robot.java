@@ -4,17 +4,17 @@ import lesson8.online.actions.Moving;
 
 public class Robot implements Moving {
 
-    private final int maxRun;
-    private final int maxJump;
+    private final int MAX_RUN;
+    private final int MAX_JUMP;
 
     public Robot(int maxRun, int maxJump) {
-        this.maxRun = maxRun;
-        this.maxJump = maxJump;
+        this.MAX_RUN = maxRun;
+        this.MAX_JUMP = maxJump;
     }
 
     @Override
     public boolean tryJump(int limit) {
-        if (isOverLimit(maxJump, limit)) {
+        if (isOverLimit(MAX_JUMP, limit)) {
             notJump(limit);
             return false;
         }
@@ -24,7 +24,7 @@ public class Robot implements Moving {
 
     @Override
     public boolean tryRun(int limit) {
-        if (isOverLimit(maxRun, limit)) {
+        if (isOverLimit(MAX_RUN, limit)) {
             notRun(limit);
             return false;
         }
@@ -54,7 +54,7 @@ public class Robot implements Moving {
 
     @Override
     public String toString() {
-        return Participants.ROBOT.getTitle() + ", maxRun=" + maxRun + ", maxJump=" + maxJump;
+        return Participants.ROBOT.getTitle() + ", maxRun=" + MAX_RUN + ", maxJump=" + MAX_JUMP;
     }
 
     private boolean isOverLimit(int opportunity, int limit) {
