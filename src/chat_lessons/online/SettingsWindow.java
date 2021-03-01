@@ -1,5 +1,6 @@
 package chat_lessons.online;
 
+import chat_lessons.online.utility.Utility;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -14,6 +15,8 @@ public class SettingsWindow {
     private static final String FXML = "\\views\\SettingsScene.fxml";
     private static final String SETTINGS_TITLE = "Settings";
     private static final String PATH_TO_SETTINGS_ICON = "\\resources\\settings_icon.png";
+    private static final int WINDOW_WIDTH = 300;
+    private static final int WINDOW_HEIGHT = 180;
 
     public static void display() throws IOException {
 
@@ -26,8 +29,9 @@ public class SettingsWindow {
         settingsWindow.getIcons().add(chatIcon);
 
         FXMLLoader loader = new FXMLLoader(SettingsWindow.class.getResource(FXML));
-        Scene settingsScene = new Scene(loader.load(), 300, 180);
+        Scene settingsScene = new Scene(loader.load(), WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        Utility.centerStage(settingsWindow, WINDOW_WIDTH, WINDOW_HEIGHT);
         settingsWindow.setScene(settingsScene);
         settingsWindow.setResizable(false);
         settingsWindow.showAndWait();

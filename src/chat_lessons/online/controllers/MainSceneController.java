@@ -1,6 +1,7 @@
 package chat_lessons.online.controllers;
 
 import chat_lessons.online.App;
+import chat_lessons.online.MainWindow;
 import chat_lessons.online.SettingsWindow;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -9,7 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.awt.*;
 import java.io.IOException;
@@ -20,28 +22,36 @@ import java.util.ResourceBundle;
 
 public class MainSceneController implements Initializable {
 
+    private static final String URI_JAVAFX = "https://openjfx.io/";
+
     @FXML
-    public TextArea chatArea;
+    private TextArea chatArea;
     @FXML
-    public ListView onlineUsers;
+    private ListView onlineUsers;
     @FXML
-    public Button btnSendMessage;
+    private Button btnSendMessage;
     @FXML
-    public TextField input;
+    private TextArea input;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         onlineUsers.setItems(FXCollections.observableArrayList("Vasya", "Petya", "Kolya"));
     }
 
-
-    public void showHelp(ActionEvent actionEvent) throws URISyntaxException, IOException {
-        Desktop desktop = Desktop.getDesktop();
-        desktop.browse(new URI("https://docs.google.com/document/d/1wr0YEtIc5yZtKFu-KITqYnBtp8KC28v2FEYUANL0YAM/edit#"));
+    @FXML
+    private void logout(ActionEvent actionEvent) throws IOException {
+        MainWindow.displayLoginWindow(App.getMainStage(), App.getDefaultScreenWidth(), App.getDefaultScreenHeight());
     }
 
-    public void exit(ActionEvent actionEvent) {
+    @FXML
+    private void exit(ActionEvent actionEvent) {
         App.closeProgram();
+    }
+
+    @FXML
+    private void aboutJavaFX(ActionEvent actionEvent) throws URISyntaxException, IOException {
+        Desktop desktop = Desktop.getDesktop();
+        desktop.browse(new URI(URI_JAVAFX));
     }
 
     @FXML
@@ -49,15 +59,18 @@ public class MainSceneController implements Initializable {
         SettingsWindow.display();
     }
 
-    public void mockAction(ActionEvent actionEvent) {
-
+    @FXML
+    private void pressEnter(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER && keyEvent.isShiftDown()) {
+            input.insertText(input.getCaretPosition(), "\n");
+        } else if (keyEvent.getCode() == KeyCode.ENTER) {
+            appendTextFromTF();
+            keyEvent.consume();
+        }
     }
 
-    public void pressEnter(ActionEvent actionEvent) {
-        appendTextFromTF();
-    }
-
-    public void btnSend(ActionEvent actionEvent) {
+    @FXML
+    private void btnSend(ActionEvent actionEvent) {
         appendTextFromTF();
     }
 

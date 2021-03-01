@@ -13,13 +13,16 @@ public class App extends Application {
     private static final int DEFAULT_SCREEN_WIDTH = DEFAULT_SCREEN_DEVICE.getDisplayMode().getWidth();
     private static final int DEFAULT_SCREEN_HEIGHT = DEFAULT_SCREEN_DEVICE.getDisplayMode().getHeight();
 
+    private static Stage mainStage;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        MainWindow.display(primaryStage, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
+        mainStage = primaryStage;
+        MainWindow.displayLoginWindow(mainStage, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
     }
 
     public static void closeProgram() {
@@ -27,8 +30,20 @@ public class App extends Application {
         try {
             answer = ConfirmWindow.display();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            exception.getMessage();
         }
         if (answer) Platform.exit();
+    }
+
+    public static int getDefaultScreenWidth() {
+        return DEFAULT_SCREEN_WIDTH;
+    }
+
+    public static int getDefaultScreenHeight() {
+        return DEFAULT_SCREEN_HEIGHT;
+    }
+
+    public static Stage getMainStage() {
+        return mainStage;
     }
 }

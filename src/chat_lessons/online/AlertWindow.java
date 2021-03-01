@@ -10,38 +10,29 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ConfirmWindow {
+public class AlertWindow {
 
-    private static final String FXML = "\\views\\ConfirmScene.fxml";
-    private static final String CONFIRM_TITLE = "Confirmation";
-    private static final String PATH_TO_CONFIRM_ICON = "\\resources\\confirm_icon.png";
+    private static final String FXML = "\\views\\AlertScene.fxml";
+    private static final String PATH_TO_CONFIRM_ICON = "\\resources\\alert_icon.png";
+    private static final String ALERT_TITLE = "Warning!";
     private static final int WINDOW_WIDTH = 200;
     private static final int WINDOW_HEIGHT = 80;
 
-    private static boolean answer;
-
-    public static boolean display() throws IOException {
-
+    public static void display() throws IOException {
         Stage confirmWindow = new Stage();
         confirmWindow.initModality(Modality.APPLICATION_MODAL);
-        confirmWindow.setTitle(CONFIRM_TITLE);
+        confirmWindow.setTitle(ALERT_TITLE);
 
         InputStream chatIconStream = App.class.getResourceAsStream(PATH_TO_CONFIRM_ICON);
         Image chatIcon = new Image(chatIconStream);
         confirmWindow.getIcons().add(chatIcon);
 
-        FXMLLoader loader = new FXMLLoader(ConfirmWindow.class.getResource(FXML));
+        FXMLLoader loader = new FXMLLoader(AlertWindow.class.getResource(FXML));
         Scene confirmScene = new Scene(loader.load(), WINDOW_WIDTH, WINDOW_HEIGHT);
 
         Utility.centerStage(confirmWindow, WINDOW_WIDTH, WINDOW_HEIGHT);
         confirmWindow.setScene(confirmScene);
         confirmWindow.setResizable(false);
         confirmWindow.showAndWait();
-
-        return answer;
-    }
-
-    public static void setAnswer(boolean answer) {
-        ConfirmWindow.answer = answer;
     }
 }
