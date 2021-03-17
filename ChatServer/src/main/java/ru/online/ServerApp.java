@@ -1,8 +1,0 @@
-package ru.online;
-
-public class ServerApp {
-
-    public static void main(String[] args) {
-        new ChatServer();
-    }
-}
