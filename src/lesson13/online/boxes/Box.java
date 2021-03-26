@@ -35,10 +35,12 @@ public class Box<T extends Fruit> {
     }
 
     public boolean compare(Box<? extends Fruit> box) {
-        return Float.compare(this.getWeight(), box.getWeight()) == 0;
+//        return Float.compare(this.getWeight(), box.getWeight()) == 0;
+        return Math.abs(this.getWeight() - box.getWeight()) < 0.0001;
     }
 
     public void transferFruits(Box<? super T> box) {
+        if (this == box) return;
         box.fruits.addAll(this.fruits);
         this.fruits.clear();
     }

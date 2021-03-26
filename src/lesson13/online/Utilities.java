@@ -1,6 +1,7 @@
 package lesson13.online;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class Utilities {
 
     // 2. Написать метод, который преобразует массив в ArrayList;
     public static <T> List<T> convertArrayToList(T[] array) {
+//        return Arrays.asList(array);
         return Stream.of(array).collect(Collectors.toCollection(ArrayList::new));
     }
 }
