@@ -14,7 +14,7 @@ public class ArrayContentUtils {
 
     public static int[] getArrayTailOrThrowException(int[] arr) {
         for (int i = arr.length - 1; i >= 0; i--) {
-            if (arr[i] == 4) return getTail(arr, i);
+            if (arr[i] == 4) return getTail(arr, i); // return Arrays.copyOfRange(arr, i + 1, arr.length)
         }
         throw new RuntimeException();
     }
@@ -33,8 +33,10 @@ public class ArrayContentUtils {
         for (int element : arr) {
             if (element == 1) {
                 counterOne++;
-            } else {
+            } else if (element == 4) {
                 counterFour++;
+            } else {
+                return false;
             }
         }
         return counterOne != 0 && counterFour != 0;

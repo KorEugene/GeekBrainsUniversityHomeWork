@@ -50,7 +50,8 @@ class ArrayContentUtilsTest {
                 Arguments.of(true, new int[]{1, 1, 1, 4, 1, 4}),
                 Arguments.of(true, new int[]{1, 4}),
                 Arguments.of(false, new int[]{1, 1, 1}),
-                Arguments.of(false, new int[]{4, 4, 4})
+                Arguments.of(false, new int[]{4, 4, 4}),
+                Arguments.of(false, new int[]{3, 4, 4, 4, 4})
         );
     }
 
@@ -78,7 +79,8 @@ class ArrayContentUtilsTest {
     static Stream<Arguments> Provider4() {
         return Stream.of(
                 Arguments.of(new int[]{1, 1, 1}),
-                Arguments.of(new int[]{4, 4, 4, 4})
+                Arguments.of(new int[]{4, 4, 4, 4}),
+                Arguments.of(new int[]{3, 4, 4, 4, 4})
         );
     }
 }
