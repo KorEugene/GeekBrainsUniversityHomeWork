@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /*
@@ -26,9 +27,9 @@ import java.util.List;
 public class TestEngine {
 
     private static Object reflectedObject;
-    private static final List<Method> BEFORE_SUITE = new ArrayList<>();
-    private static final List<Method> TEST_METHODS = new ArrayList<>();
-    private static final List<Method> AFTER_SUITE = new ArrayList<>();
+    private static List<Method> BEFORE_SUITE;
+    private static List<Method> TEST_METHODS;
+    private static List<Method> AFTER_SUITE;
 
     public static void start(String testClassName) {
         try {
@@ -39,6 +40,9 @@ public class TestEngine {
     }
 
     public static void start(Class testClass) {
+        BEFORE_SUITE = new ArrayList<>();
+        TEST_METHODS = new ArrayList<>();
+        AFTER_SUITE = new ArrayList<>();
         try {
             reflectedObject = getInstance(testClass);
             extractMethods(testClass);
@@ -73,6 +77,9 @@ public class TestEngine {
         if (annotationClass.isAssignableFrom(BeforeSuite.class) || annotationClass.isAssignableFrom(AfterSuite.class)) {
             checkAnnotationCount(methodList);
         }
+        if (annotationClass.isAssignableFrom(Test.class)) {
+            methodList.sort(Comparator.comparingInt(o -> o.getAnnotation(Test.class).priority()));
+        }
         for (Method method : methodList) {
             method.setAccessible(true);
             method.invoke(reflectedObject);
@@ -82,6 +89,4 @@ public class TestEngine {
     private static void checkAnnotationCount(List<Method> methodList) {
         if (methodList.size() > 1) throw new RuntimeException();
     }
-
-
 }
