@@ -4,6 +4,8 @@ import lesson19.online.annotations.AfterSuite;
 import lesson19.online.annotations.BeforeSuite;
 import lesson19.online.annotations.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,23 +25,39 @@ import java.util.List;
 
 public class TestEngine {
 
+    private static Object reflectedObject;
     private static final List<Method> BEFORE_SUITE = new ArrayList<>();
     private static final List<Method> TEST_METHODS = new ArrayList<>();
     private static final List<Method> AFTER_SUITE = new ArrayList<>();
 
-    public static void start(String testClassName) throws ClassNotFoundException {
-        start(Class.forName(testClassName));
+    public static void start(String testClassName) {
+        try {
+            start(Class.forName(testClassName));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void start(Class testClassObject) {
-        extractMethods(testClassObject);
-        runTest(BEFORE_SUITE, BeforeSuite.class);
-        runTest(TEST_METHODS, Test.class);
-        runTest(AFTER_SUITE, AfterSuite.class);
+    public static void start(Class testClass) {
+        try {
+            reflectedObject = getInstance(testClass);
+            extractMethods(testClass);
+            runTest(BEFORE_SUITE, BeforeSuite.class);
+            runTest(TEST_METHODS, Test.class);
+            runTest(AFTER_SUITE, AfterSuite.class);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void extractMethods(Class testClassObject) {
-        Method[] methods = testClassObject.getDeclaredMethods();
+    private static Object getInstance(Class testClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor constructor = testClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        return constructor.newInstance();
+    }
+
+    private static void extractMethods(Class testClass) {
+        Method[] methods = testClass.getDeclaredMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(BeforeSuite.class)) {
                 BEFORE_SUITE.add(method);
@@ -51,12 +69,14 @@ public class TestEngine {
         }
     }
 
-    private static void runTest(List<Method> methodList, Class annotationClass) {
+    private static void runTest(List<Method> methodList, Class annotationClass) throws InvocationTargetException, IllegalAccessException {
         if (annotationClass.isAssignableFrom(BeforeSuite.class) || annotationClass.isAssignableFrom(AfterSuite.class)) {
             checkAnnotationCount(methodList);
         }
-
-
+        for (Method method : methodList) {
+            method.setAccessible(true);
+            method.invoke(reflectedObject);
+        }
     }
 
     private static void checkAnnotationCount(List<Method> methodList) {
