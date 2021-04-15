@@ -46,9 +46,11 @@ public class TestEngine {
         try {
             reflectedObject = getInstance(testClass);
             extractMethods(testClass);
-            runTest(BEFORE_SUITE, BeforeSuite.class);
-            runTest(TEST_METHODS, Test.class);
-            runTest(AFTER_SUITE, AfterSuite.class);
+            checkBeforeAfterCount();
+            runTests(BEFORE_SUITE);
+            sortTestsByPriority();
+            runTests(TEST_METHODS);
+            runTests(AFTER_SUITE);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
         }
@@ -73,20 +75,18 @@ public class TestEngine {
         }
     }
 
-    private static void runTest(List<Method> methodList, Class annotationClass) throws InvocationTargetException, IllegalAccessException {
-        if (annotationClass.isAssignableFrom(BeforeSuite.class) || annotationClass.isAssignableFrom(AfterSuite.class)) {
-            checkAnnotationCount(methodList);
-        }
-        if (annotationClass.isAssignableFrom(Test.class)) {
-            methodList.sort(Comparator.comparingInt(o -> o.getAnnotation(Test.class).priority()));
-        }
+    private static void runTests(List<Method> methodList) throws InvocationTargetException, IllegalAccessException {
         for (Method method : methodList) {
             method.setAccessible(true);
             method.invoke(reflectedObject);
         }
     }
 
-    private static void checkAnnotationCount(List<Method> methodList) {
-        if (methodList.size() > 1) throw new RuntimeException();
+    private static void sortTestsByPriority() {
+        TEST_METHODS.sort(Comparator.comparingInt(o -> o.getAnnotation(Test.class).priority()));
+    }
+
+    private static void checkBeforeAfterCount() {
+        if (BEFORE_SUITE.size() > 1 || AFTER_SUITE.size() > 1) throw new RuntimeException();
     }
 }
