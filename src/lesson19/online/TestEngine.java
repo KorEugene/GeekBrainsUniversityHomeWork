@@ -68,6 +68,8 @@ public class TestEngine {
             if (method.isAnnotationPresent(BeforeSuite.class)) {
                 BEFORE_SUITE.add(method);
             } else if (method.isAnnotationPresent(Test.class)) {
+                int priority = method.getAnnotation(Test.class).priority();
+                if (priority < 1 || priority > 10) throw new RuntimeException();
                 TEST_METHODS.add(method);
             } else if (method.isAnnotationPresent(AfterSuite.class)) {
                 AFTER_SUITE.add(method);
